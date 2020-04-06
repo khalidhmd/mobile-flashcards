@@ -7,18 +7,17 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default class AddCard extends React.Component {
+export default class CreateDeck extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.question}>
-          <TextInput placeholder="Question" style={styles.text} />
-          <TextInput placeholder="Answer" style={styles.text} />
-        </View>
+        <Text style={styles.title}>What is the title of your new deck?</Text>
+
+        <TextInput style={styles.text} />
 
         <TouchableOpacity>
           <View>
-            <Text style={styles.submit}>Submit</Text>
+            <Text style={styles.submit}>Create Deck</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -32,19 +31,21 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
-
+  title: {
+    fontSize: 30,
+    alignSelf: "stretch",
+    textAlign: "center",
+    fontWeight: "bold",
+    padding: 10,
+  },
   text: {
     fontSize: 25,
     borderWidth: 2,
-    marginHorizontal: 7,
+    marginHorizontal: 10,
     marginVertical: 10,
-    width: 400,
+    width: "90%",
     borderRadius: 8,
     padding: 5,
-  },
-  question: {
-    padding: 5,
-    marginTop: 2,
   },
 
   submit: {

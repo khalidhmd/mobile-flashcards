@@ -5,7 +5,7 @@ import DeckItem from "./DeckItem";
 export default class DeckList extends React.Component {
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <DeckItem />
         <DeckItem />
         <DeckItem />
@@ -13,3 +13,8 @@ export default class DeckList extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: { backgroundColor: "#f1f1f1" },
+  flex: 1,
+});

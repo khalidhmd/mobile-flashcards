@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View } from "react-native";
-import DeckList from "./Components/DeckList";
+import Deck from "./Components/Deck";
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={{ marginTop: 20 }}>
-        <DeckList />
+      <View style={{ marginTop: 20, flex: 1 }}>
+        <Deck />
       </View>
     );
   }

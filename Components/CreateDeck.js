@@ -1,5 +1,5 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+
 import {
   TouchableOpacity,
   View,
@@ -8,19 +8,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-const Stack = createStackNavigator();
-
-export default class CreateDeck extends React.Component {
-  render() {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="NewDeck" component={CreateDeckView} />
-      </Stack.Navigator>
-    );
-  }
-}
-
-class CreateDeckView extends React.Component {
+export default class CreateDeckView extends React.Component {
   render() {
     return (
       <View style={styles.container}>

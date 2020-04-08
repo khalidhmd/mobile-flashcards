@@ -8,24 +8,32 @@ import {
 } from "react-native";
 
 export default class DeckList extends React.Component {
-  render() {
+  handlePress = (item) => {
     const { navigation } = this.props;
+    navigation.navigate("Deck", { deck: item });
+  };
+  Item = ({ item }) => {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate("Deck")}>
-          <View style={styles.deck}>
-            <Text style={styles.title}>Deck title</Text>
-            <Text style={styles.text}>3 cards</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Deck")}>
-          <View style={styles.deck}>
-            <Text style={styles.title}>Deck title</Text>
-            <Text style={styles.text}>4 cards</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={() => this.handlePress(item)}>
+        <View style={styles.deck}>
+          <Text style={styles.title}>{item.key}</Text>
+          <Text style={styles.text}>{item.cards} cards</Text>
+        </View>
+      </TouchableOpacity>
     );
+  };
+  render() {
+    const { getDecks } = this.props.route.params;
+    const decks = getDecks();
+    const deckKeys = Object.keys(decks);
+    const deckArray = deckKeys.map((title) => {
+      return {
+        key: title,
+        cards: decks[title][`questions`].length,
+      };
+    });
+
+    return <FlatList data={deckArray} renderItem={this.Item} />;
   }
 }
 

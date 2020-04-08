@@ -9,8 +9,9 @@ const Tab = createBottomTabNavigator();
 
 export default class HomeTab extends React.Component {
   render() {
+    const { getDecks } = this.props.route.params;
     return (
-      <View style={{ marginTop: 20, flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
@@ -32,7 +33,7 @@ export default class HomeTab extends React.Component {
                     style={{
                       fontSize: 15,
                       fontWeight: "bold",
-                      color: focused ? "red" : "black",
+                      color,
                     }}
                   >
                     {text}
@@ -48,7 +49,11 @@ export default class HomeTab extends React.Component {
             showLabel: false,
           }}
         >
-          <Tab.Screen name="Decks" component={DeckList} />
+          <Tab.Screen
+            name="Decks"
+            component={DeckList}
+            initialParams={{ getDecks }}
+          />
           <Tab.Screen name="NewDeck" component={CreateDeck} />
         </Tab.Navigator>
       </View>

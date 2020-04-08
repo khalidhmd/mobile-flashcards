@@ -3,11 +3,12 @@ import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 
 export default class DeckItem extends React.Component {
   render() {
+    const { deck } = this.props.route.params;
     return (
       <View style={styles.container}>
         <View style={styles.deck}>
-          <Text style={styles.title}>Deck title</Text>
-          <Text style={styles.text}>3 cards</Text>
+          <Text style={styles.title}>{deck.key}</Text>
+          <Text style={styles.text}>{deck.cards} cards</Text>
         </View>
 
         <TouchableOpacity>

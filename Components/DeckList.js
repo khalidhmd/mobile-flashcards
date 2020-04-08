@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import { getDecks } from "../api/helpers";
+
 export default class DeckList extends React.Component {
+  state = {
+    decks: {},
+  };
   handlePress = (item) => {
     const { navigation } = this.props;
     navigation.navigate("Deck", { deck: item });
@@ -22,14 +27,19 @@ export default class DeckList extends React.Component {
       </TouchableOpacity>
     );
   };
+  loadDecks = async () => {
+    const decks = await getDecks();
+    this.setState({ decks });
+  };
+  async componentDidMount() {
+    this.loadDecks();
+  }
   render() {
-    const { getDecks } = this.props.route.params;
-    const decks = getDecks();
-    const deckKeys = Object.keys(decks);
+    const deckKeys = Object.keys(this.state.decks);
     const deckArray = deckKeys.map((title) => {
       return {
         key: title,
-        cards: decks[title][`questions`].length,
+        cards: this.state.decks[title][`questions`].length,
       };
     });
 

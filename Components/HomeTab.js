@@ -9,7 +9,6 @@ const Tab = createBottomTabNavigator();
 
 export default class HomeTab extends React.Component {
   render() {
-    const { getDecks } = this.props.route.params;
     return (
       <View style={{ flex: 1 }}>
         <Tab.Navigator
@@ -49,11 +48,7 @@ export default class HomeTab extends React.Component {
             showLabel: false,
           }}
         >
-          <Tab.Screen
-            name="Decks"
-            component={DeckList}
-            initialParams={{ getDecks }}
-          />
+          <Tab.Screen name="Decks" component={DeckList} />
           <Tab.Screen name="NewDeck" component={CreateDeck} />
         </Tab.Navigator>
       </View>

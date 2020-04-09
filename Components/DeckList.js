@@ -19,7 +19,7 @@ export default class DeckList extends React.Component {
     const { position } = this.state;
 
     const { navigation } = this.props;
-    Animated.timing(position, { toValue: -400, duration: 300 }).start();
+    Animated.timing(position, { toValue: -400, duration: 500 }).start();
     navigation.navigate("Deck", { deck });
   };
 

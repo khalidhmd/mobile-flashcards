@@ -17,6 +17,7 @@ export default class CreateDeckView extends React.Component {
     await createDeck(this.state.title);
     const deck = { title: this.state.title, questions: [] };
     this.setState({ title: "" });
+
     navigation.navigate("Deck", { deck });
   };
   render() {

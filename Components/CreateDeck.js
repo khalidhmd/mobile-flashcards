@@ -1,5 +1,5 @@
 import React from "react";
-
+import { createDeck } from "../api/helpers";
 import {
   TouchableOpacity,
   View,
@@ -9,14 +9,27 @@ import {
 } from "react-native";
 
 export default class CreateDeckView extends React.Component {
+  state = {
+    title: "",
+  };
+  handlePress = async () => {
+    const { navigation } = this.props;
+    await createDeck(this.state.title);
+    this.setState({ title: "" });
+    navigation.navigate("Decks");
+  };
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>What is the title of your new deck?</Text>
 
-        <TextInput style={styles.text} />
+        <TextInput
+          style={styles.text}
+          value={this.state.title}
+          onChangeText={(text) => this.setState({ title: text })}
+        />
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={this.handlePress}>
           <View>
             <Text style={styles.submit}>Create Deck</Text>
           </View>

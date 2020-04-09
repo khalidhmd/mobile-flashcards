@@ -7,12 +7,16 @@ import HomeTab from "./Components/HomeTab";
 import AddCard from "./Components/AddCard";
 import Deck from "./Components/Deck";
 import Quiz from "./Components/Quiz";
-
+import { init } from "./api/helpers";
+import { Text, View } from "react-native";
 const Stack = createStackNavigator();
 
 export default class App extends React.Component {
+  state = {
+    initialized: false,
+  };
+
   render() {
-    // const { getDeck, getDecks, addQuestion, createDeck } = this;
     return (
       <NavigationContainer>
         <Stack.Navigator>

@@ -1,27 +1,62 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { deleteDeck, getDeck } from "../api/helpers";
 
 export default class DeckItem extends React.Component {
-  render() {
+  state = {
+    deck: { tite: "", questions: [] },
+  };
+  addCard = (deck) => {
+    const { navigation } = this.props;
+    navigation.navigate("NewCard", { deck });
+  };
+
+  startQuiz = (deck) => {
+    const { navigation } = this.props;
+    if (deck.questions.length < 1) {
+      alert(`You can't take quiz on empty deck`);
+      return;
+    }
+    navigation.navigate("Quiz", { deck });
+  };
+
+  handleDelete = async (title) => {
+    await deleteDeck(title);
+
+    const { navigation } = this.props;
+    navigation.pop();
+    navigation.navigate("Decks");
+  };
+  componentDidMount() {
+    const { navigation } = this.props;
     const { deck } = this.props.route.params;
+
+    this.setState({ deck });
+    navigation.addListener("focus", async () => {
+      const freshDeck = await getDeck(deck.title);
+      this.setState({ deck: freshDeck });
+    });
+  }
+  render() {
+    const { deck } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.deck}>
-          <Text style={styles.title}>{deck.key}</Text>
-          <Text style={styles.text}>{deck.cards} cards</Text>
+          <Text style={styles.title}>{deck.title}</Text>
+          <Text style={styles.text}>{deck.questions.length} cards</Text>
         </View>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.addCard(deck)}>
           <View>
             <Text style={styles.addCard}>Add Card</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.startQuiz(deck)}>
           <View>
             <Text style={styles.start}>Start Quiz</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.handleDelete(deck.title)}>
           <View>
             <Text style={styles.delete}>Delete Deck</Text>
           </View>

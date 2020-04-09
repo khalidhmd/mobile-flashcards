@@ -1,7 +1,6 @@
 To install the app dependencies, run `yarn add` or `npm install`
 
-You will need to run:
-`expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view`
+This project was tested on Android semulator on Ubuntu computer.
 
 To Start the app in your development environment, run `yarn start` or `npm start`
 

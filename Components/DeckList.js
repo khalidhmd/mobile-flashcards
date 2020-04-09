@@ -13,37 +13,49 @@ export default class DeckList extends React.Component {
   state = {
     decks: {},
   };
-  handlePress = (item) => {
+  handlePress = (deck) => {
     const { navigation } = this.props;
-    navigation.navigate("Deck", { deck: item });
+
+    navigation.navigate("Deck", { deck });
   };
-  Item = ({ item }) => {
-    return (
-      <TouchableOpacity onPress={() => this.handlePress(item)}>
-        <View style={styles.deck}>
-          <Text style={styles.title}>{item.key}</Text>
-          <Text style={styles.text}>{item.cards} cards</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+
   loadDecks = async () => {
     const decks = await getDecks();
+
     this.setState({ decks });
   };
   async componentDidMount() {
+    const { navigation } = this.props;
+    navigation.addListener("focus", () => this.loadDecks());
     this.loadDecks();
   }
   render() {
     const deckKeys = Object.keys(this.state.decks);
     const deckArray = deckKeys.map((title) => {
       return {
-        key: title,
-        cards: this.state.decks[title][`questions`].length,
+        title,
+        questions: this.state.decks[title][`questions`],
       };
     });
 
-    return <FlatList data={deckArray} renderItem={this.Item} />;
+    return (
+      <View>
+        <FlatList
+          data={deckArray}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity onPress={() => this.handlePress(item)}>
+                <View style={styles.deck}>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <Text style={styles.text}>{item.questions.length} cards</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+          keyExtractor={(item) => item.title}
+        />
+      </View>
+    );
   }
 }
 

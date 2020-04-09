@@ -30,9 +30,14 @@ const decks = {
 export const getDecks = async () => {
   try {
     const value = await AsyncStorage.getItem(appKey);
-    if (value !== null && value !== "") {
+
+    if (value !== null) {
       return JSON.parse(value);
-    } else return decks;
+    } else {
+      await AsyncStorage.setItem(appKey, JSON.stringify(decks));
+      console.log(decks);
+      return decks;
+    }
   } catch (e) {
     console.log(e);
   }
@@ -41,8 +46,10 @@ export const getDecks = async () => {
 export const getDeck = async (title) => {
   try {
     const value = await AsyncStorage.getItem(appKey);
-    if (value !== null && value !== "") {
-      return JSON.parse(value)[title];
+    if (value !== null) {
+      const deck = JSON.parse(value)[title];
+
+      return deck;
     }
   } catch (e) {
     console.log(e);
@@ -51,10 +58,11 @@ export const getDeck = async (title) => {
 
 export const addQuestion = async (title, question) => {
   try {
+    console.log("runs");
     const value = await AsyncStorage.getItem(appKey);
-    if (value !== null && value !== "") {
+    if (value !== null) {
       const decks = JSON.parse(value);
-      decks[title][questions].push(question);
+      decks[title]["questions"].push(question);
       await AsyncStorage.setItem(appKey, JSON.stringify(decks));
     }
   } catch (e) {
@@ -65,9 +73,25 @@ export const addQuestion = async (title, question) => {
 export const createDeck = async (title) => {
   try {
     const value = await AsyncStorage.getItem(appKey);
-    if (value !== null && value !== "") {
+    if (value !== null) {
       const decks = JSON.parse(value);
       decks[title] = { title, questions: [] };
+      await AsyncStorage.setItem(appKey, JSON.stringify(decks));
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteDeck = async (title) => {
+  try {
+    const value = await AsyncStorage.getItem(appKey);
+
+    if (value !== null) {
+      const decks = JSON.parse(value);
+      decks[title] = undefined;
+      delete decks[title];
+
       await AsyncStorage.setItem(appKey, JSON.stringify(decks));
     }
   } catch (e) {

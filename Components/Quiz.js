@@ -9,7 +9,39 @@ export default class Quiz extends React.Component {
     correct: 0,
     incorrect: 0,
   };
+
+  handleCorrect = () => {
+    this.setState({
+      remaining: this.state.remaining - 1,
+      correct: this.state.correct + 1,
+    });
+  };
+
+  handleIncorrect = () => {
+    this.setState({
+      remaining: this.state.remaining - 1,
+      incorrect: this.state.incorrect + 1,
+    });
+  };
+
+  goBack = () => {
+    const { navigation } = this.props;
+    navigation.pop();
+    navigation.navigate("Decks");
+  };
+
+  componentDidMount() {
+    const { navigation } = this.props;
+    const { deck } = this.props.route.params;
+    this.setState({
+      remaining: deck.questions.length,
+      total: deck.questions.length,
+      current: 0,
+    });
+  }
+
   render() {
+    const { deck } = this.props.route.params;
     const { question, correct, incorrect, total } = this.state;
     if (this.state.remaining <= 0) {
       return (
@@ -17,9 +49,9 @@ export default class Quiz extends React.Component {
           <Text style={styles.counter}>Correct: {correct}</Text>
           <Text style={styles.counter}>Incorrect: {incorrect}</Text>
           <Text style={styles.percent}>
-            Percentage: {(correct / total) * 100}
+            Percentage: {((correct / total) * 100).toFixed(2)} %
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.goBack}>
             <View>
               <Text style={styles.correct}>Go Back</Text>
             </View>
@@ -30,22 +62,26 @@ export default class Quiz extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.counter}>
-          {this.state.remaining}/{this.state.total}
+          Remaining: {this.state.remaining}/{this.state.total}
         </Text>
         <Text style={styles.title}>
-          {question ? "The question" : "The answer"}
+          {question
+            ? deck.questions[this.state.current].question
+            : deck.questions[this.state.current].answer}
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.setState({ question: !question })}
+        >
           <View>
             <Text style={styles.flip}>{question ? "Answer" : "Question"}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={this.handleCorrect}>
           <View>
             <Text style={styles.correct}>Correct</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={this.handleIncorrect}>
           <View>
             <Text style={styles.incorrect}>Incorrect</Text>
           </View>

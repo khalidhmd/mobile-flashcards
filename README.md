@@ -1,8 +1,8 @@
-To install the app dependencies, run `yarn add` or `npm install`
+To install the app dependencies, run `npm install`
 
 This project was tested on Android semulator on Ubuntu computer.
 
-To Start the app in your development environment, run `yarn start` or `npm start`
+To Start the app in your development environment, run `npm start`
 
 To run the app with live reloading, choose one of:
 • Scan the QR code above with the Expo app (Android) or the Camera app (iOS).

@@ -35,7 +35,7 @@ export const getDecks = async () => {
       return JSON.parse(value);
     } else {
       await AsyncStorage.setItem(appKey, JSON.stringify(decks));
-      console.log(decks);
+
       return decks;
     }
   } catch (e) {

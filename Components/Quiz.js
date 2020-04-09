@@ -23,11 +23,18 @@ export default class Quiz extends React.Component {
       incorrect: this.state.incorrect + 1,
     });
   };
-
+  startOver = () => {
+    this.setState({
+      remaining: this.state.total,
+      correct: 0,
+      current: 0,
+      incorrect: 0,
+    });
+  };
   goBack = () => {
     const { navigation } = this.props;
     navigation.pop();
-    navigation.navigate("Decks");
+    // navigation.goBack("Decks");
   };
 
   componentDidMount() {
@@ -51,9 +58,14 @@ export default class Quiz extends React.Component {
           <Text style={styles.percent}>
             Percentage: {((correct / total) * 100).toFixed(2)} %
           </Text>
+          <TouchableOpacity onPress={this.startOver}>
+            <View>
+              <Text style={styles.correct}>Restart Quiz</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={this.goBack}>
             <View>
-              <Text style={styles.correct}>Go Back</Text>
+              <Text style={styles.correct}>Back to Deck</Text>
             </View>
           </TouchableOpacity>
         </View>

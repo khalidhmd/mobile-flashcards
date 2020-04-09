@@ -15,8 +15,9 @@ export default class CreateDeckView extends React.Component {
   handlePress = async () => {
     const { navigation } = this.props;
     await createDeck(this.state.title);
+    const deck = { title: this.state.title, questions: [] };
     this.setState({ title: "" });
-    navigation.navigate("Decks");
+    navigation.navigate("Deck", { deck });
   };
   render() {
     return (

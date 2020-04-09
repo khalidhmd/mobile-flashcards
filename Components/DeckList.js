@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 
 import { getDecks } from "../api/helpers";
@@ -12,10 +13,13 @@ import { getDecks } from "../api/helpers";
 export default class DeckList extends React.Component {
   state = {
     decks: {},
+    position: new Animated.Value(0),
   };
   handlePress = (deck) => {
-    const { navigation } = this.props;
+    const { position } = this.state;
 
+    const { navigation } = this.props;
+    Animated.timing(position, { toValue: -400, duration: 300 }).start();
     navigation.navigate("Deck", { deck });
   };
 
@@ -26,7 +30,11 @@ export default class DeckList extends React.Component {
   };
   async componentDidMount() {
     const { navigation } = this.props;
-    navigation.addListener("focus", () => this.loadDecks());
+    navigation.addListener("focus", () => {
+      const { position } = this.state;
+      this.loadDecks();
+      Animated.timing(position, { toValue: 0, duration: 100 }).start();
+    });
     this.loadDecks();
   }
   render() {
@@ -37,7 +45,7 @@ export default class DeckList extends React.Component {
         questions: this.state.decks[title][`questions`],
       };
     });
-
+    const { position } = this.state;
     return (
       <View>
         <FlatList
@@ -45,10 +53,10 @@ export default class DeckList extends React.Component {
           renderItem={({ item }) => {
             return (
               <TouchableOpacity onPress={() => this.handlePress(item)}>
-                <View style={styles.deck}>
+                <Animated.View style={[styles.deck, { left: position }]}>
                   <Text style={styles.title}>{item.title}</Text>
                   <Text style={styles.text}>{item.questions.length} cards</Text>
-                </View>
+                </Animated.View>
               </TouchableOpacity>
             );
           }}

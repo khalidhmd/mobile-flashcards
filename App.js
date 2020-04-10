@@ -7,8 +7,9 @@ import HomeTab from "./Components/HomeTab";
 import AddCard from "./Components/AddCard";
 import Deck from "./Components/Deck";
 import Quiz from "./Components/Quiz";
-import { init } from "./api/helpers";
+import { setLocalNotification, listenForNotifications } from "./api/helpers";
 import { Text, View } from "react-native";
+
 const Stack = createStackNavigator();
 
 export default class App extends React.Component {
@@ -16,15 +17,16 @@ export default class App extends React.Component {
     initialized: false,
   };
 
+  componentDidMount() {
+    setLocalNotification();
+    listenForNotifications();
+  }
+
   render() {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen
-            name="Decks"
-            component={HomeTab}
-            // initialParams={{ getDeck, getDecks, addQuestion, createDeck }}
-          />
+          <Stack.Screen name="Decks" component={HomeTab} />
           <Stack.Screen name="NewCard" component={AddCard} />
           <Stack.Screen name="Deck" component={Deck} />
           <Stack.Screen name="Quiz" component={Quiz} />

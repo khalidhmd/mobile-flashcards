@@ -1,6 +1,11 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import { deleteDeck, getDeck } from "../api/helpers";
+import {
+  deleteDeck,
+  getDeck,
+  clearLocalNotification,
+  setLocalNotification,
+} from "../api/helpers";
 
 export default class DeckItem extends React.Component {
   state = {
@@ -11,12 +16,14 @@ export default class DeckItem extends React.Component {
     navigation.navigate("NewCard", { deck });
   };
 
-  startQuiz = (deck) => {
+  startQuiz = async (deck) => {
     const { navigation } = this.props;
     if (deck.questions.length < 1) {
       alert(`You can't take quiz on empty deck`);
       return;
     }
+    await clearLocalNotification();
+    await setLocalNotification();
     navigation.navigate("Quiz", { deck });
   };
 

@@ -16,6 +16,10 @@ export default class AddCard extends React.Component {
   saveCard = async () => {
     const { navigation } = this.props;
     const { deck } = this.props.route.params;
+    if (this.state.answer === "" || this.state.question === "") {
+      alert(`Question and Answer can't be empty`);
+      return;
+    }
 
     try {
       await addQuestion(deck.title, {

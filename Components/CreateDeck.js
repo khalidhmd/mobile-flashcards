@@ -14,6 +14,10 @@ export default class CreateDeckView extends React.Component {
   };
   handlePress = async () => {
     const { navigation } = this.props;
+    if (this.state.title === "") {
+      alert(`Deck title can't be empty. Please enter deck title.`);
+      return;
+    }
     await createDeck(this.state.title);
     const deck = { title: this.state.title, questions: [] };
     this.setState({ title: "" });

@@ -5,15 +5,18 @@ export default class Quiz extends React.Component {
   state = {
     question: true,
     remaining: 0,
-    total: 10,
+    total: 0,
     correct: 0,
     incorrect: 0,
+    current: 0,
   };
 
   handleCorrect = () => {
     this.setState({
       remaining: this.state.remaining - 1,
       correct: this.state.correct + 1,
+      current: this.state.current + 1,
+      question: true,
     });
   };
 
@@ -21,29 +24,29 @@ export default class Quiz extends React.Component {
     this.setState({
       remaining: this.state.remaining - 1,
       incorrect: this.state.incorrect + 1,
+      current: this.state.current + 1,
+      question: true,
     });
   };
   startOver = () => {
     this.setState({
       remaining: this.state.total,
       correct: 0,
-      current: 0,
       incorrect: 0,
+      current: 0,
     });
   };
+
   goBack = () => {
     const { navigation } = this.props;
     navigation.pop();
-    // navigation.goBack("Decks");
   };
 
   componentDidMount() {
-    const { navigation } = this.props;
     const { deck } = this.props.route.params;
     this.setState({
       remaining: deck.questions.length,
       total: deck.questions.length,
-      current: 0,
     });
   }
 

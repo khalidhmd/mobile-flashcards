@@ -1,7 +1,8 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { connect } from "react-redux";
 
-export default class Quiz extends React.Component {
+class Quiz extends React.Component {
   state = {
     question: true,
     remaining: 0,
@@ -43,15 +44,18 @@ export default class Quiz extends React.Component {
   };
 
   componentDidMount() {
-    const { deck } = this.props.route.params;
+    const { title } = this.props.route.params;
+
     this.setState({
-      remaining: deck.questions.length,
-      total: deck.questions.length,
+      remaining: this.props.decks[title].questions.length,
+      total: this.props.decks[title].questions.length,
     });
   }
 
   render() {
-    const { deck } = this.props.route.params;
+    const { title } = this.props.route.params;
+    const deck = this.props.decks[title];
+
     const { question, correct, incorrect, total } = this.state;
     if (this.state.remaining <= 0) {
       return (
@@ -105,6 +109,11 @@ export default class Quiz extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return { decks: state };
+};
+
+export default connect(mapStateToProps)(Quiz);
 
 const styles = StyleSheet.create({
   container: {

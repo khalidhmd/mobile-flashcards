@@ -7,42 +7,26 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
+import { connect } from "react-redux";
 
-import { getDecks } from "../api/helpers";
-
-export default class DeckList extends React.Component {
+class DeckList extends React.Component {
   state = {
-    decks: {},
     position: new Animated.Value(0),
   };
-  handlePress = (deck) => {
+  handlePress = (title) => {
     const { position } = this.state;
-
     const { navigation } = this.props;
     Animated.timing(position, { toValue: -400, duration: 500 }).start();
-    navigation.navigate("Deck", { deck });
+    Animated.timing(position, { toValue: 0, duration: 500 }).start();
+    navigation.navigate("Deck", { title });
   };
 
-  loadDecks = async () => {
-    const decks = await getDecks();
-
-    this.setState({ decks });
-  };
-  async componentDidMount() {
-    const { navigation } = this.props;
-    navigation.addListener("focus", () => {
-      const { position } = this.state;
-      this.loadDecks();
-      Animated.timing(position, { toValue: 0, duration: 100 }).start();
-    });
-    this.loadDecks();
-  }
   render() {
-    const deckKeys = Object.keys(this.state.decks);
+    const deckKeys = Object.keys(this.props.decks);
     const deckArray = deckKeys.map((title) => {
       return {
         title,
-        questions: this.state.decks[title][`questions`],
+        questions: this.props.decks[title][`questions`],
       };
     });
     const { position } = this.state;
@@ -52,7 +36,7 @@ export default class DeckList extends React.Component {
           data={deckArray}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => this.handlePress(item)}>
+              <TouchableOpacity onPress={() => this.handlePress(item.title)}>
                 <Animated.View style={[styles.deck, { left: position }]}>
                   <Text style={styles.title}>{item.title}</Text>
                   <Text style={styles.text}>{item.questions.length} cards</Text>
@@ -66,6 +50,13 @@ export default class DeckList extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    decks: state,
+  };
+};
+export default connect(mapStateToProps)(DeckList);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,5 @@
 import React from "react";
-import { createDeck } from "../api/helpers";
+
 import {
   TouchableOpacity,
   View,
@@ -8,22 +8,23 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default class CreateDeckView extends React.Component {
+import { connect } from "react-redux";
+
+class CreateDeckView extends React.Component {
   state = {
     title: "",
   };
-  handlePress = async () => {
+  handlePress = () => {
     const { navigation } = this.props;
     if (this.state.title === "") {
       alert(`Deck title can't be empty. Please enter deck title.`);
       return;
     }
-    await createDeck(this.state.title);
-    const deck = { title: this.state.title, questions: [] };
+    this.props.createDeck(this.state.title);
     this.setState({ title: "" });
-
-    navigation.navigate("Deck", { deck });
+    navigation.navigate("Deck", { title: this.state.title });
   };
+
   render() {
     return (
       <View style={styles.container}>
@@ -44,6 +45,18 @@ export default class CreateDeckView extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return { decks: state };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createDeck: (title) => {
+      console.log("create");
+      dispatch({ type: "CREATE_DECK", title });
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CreateDeckView);
 
 const styles = StyleSheet.create({
   container: {

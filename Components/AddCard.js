@@ -6,34 +6,27 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
-import { addQuestion } from "../api/helpers";
 
-export default class AddCard extends React.Component {
+import { connect } from "react-redux";
+
+class AddCard extends React.Component {
   state = {
     question: "",
     answer: "",
   };
-  saveCard = async () => {
+  saveCard = (title) => {
     const { navigation } = this.props;
-    const { deck } = this.props.route.params;
     if (this.state.answer === "" || this.state.question === "") {
       alert(`Question and Answer can't be empty`);
       return;
     }
-
-    try {
-      await addQuestion(deck.title, {
-        question: this.state.question,
-        answer: this.state.answer,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-
+    this.props.addCard(title, this.state);
     navigation.navigate("Deck");
   };
+
   render() {
-    const { deck } = this.props.route.params;
+    const { title } = this.props.route.params;
+    const deck = this.props.decks[title];
 
     return (
       <View style={styles.container}>
@@ -55,7 +48,7 @@ export default class AddCard extends React.Component {
           />
         </View>
 
-        <TouchableOpacity onPress={this.saveCard}>
+        <TouchableOpacity onPress={() => this.saveCard(title)}>
           <View>
             <Text style={styles.submit}>Submit</Text>
           </View>
@@ -64,6 +57,19 @@ export default class AddCard extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return { decks: state };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addCard: (title, question) => {
+      dispatch({ type: "ADD_QUESTION", title, question });
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddCard);
 
 const styles = StyleSheet.create({
   container: {

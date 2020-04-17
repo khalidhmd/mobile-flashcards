@@ -1,51 +1,41 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import {
-  deleteDeck,
-  getDeck,
-  clearLocalNotification,
-  setLocalNotification,
-} from "../api/helpers";
+import { clearLocalNotification, setLocalNotification } from "../api/helpers";
 
-export default class DeckItem extends React.Component {
+import { connect } from "react-redux";
+
+class DeckItem extends React.Component {
   state = {
     deck: { tite: "", questions: [] },
   };
-  addCard = (deck) => {
+  addCard = (title) => {
     const { navigation } = this.props;
-    navigation.navigate("NewCard", { deck });
+    navigation.navigate("NewCard", { title });
   };
 
-  startQuiz = async (deck) => {
+  startQuiz = (title) => {
     const { navigation } = this.props;
-    if (deck.questions.length < 1) {
+    if (this.props.decks[title].questions.length < 1) {
       alert(`You can't take quiz on empty deck`);
       return;
     }
-    await clearLocalNotification();
-    await setLocalNotification();
-    navigation.navigate("Quiz", { deck });
+    clearLocalNotification()
+      .then(() => setLocalNotification())
+      .then(() => navigation.navigate("Quiz", { title }));
   };
 
   handleDelete = async (title) => {
-    await deleteDeck(title);
-
     const { navigation } = this.props;
     navigation.pop();
     navigation.navigate("Decks");
+    this.props.deleteDeck(title);
   };
-  componentDidMount() {
-    const { navigation } = this.props;
-    const { deck } = this.props.route.params;
 
-    this.setState({ deck });
-    navigation.addListener("focus", async () => {
-      const freshDeck = await getDeck(deck.title);
-      this.setState({ deck: freshDeck });
-    });
-  }
   render() {
-    const { deck } = this.state;
+    const { title } = this.props.route.params;
+    const deck = this.props.decks[title];
+
+    if (!deck) return null;
     return (
       <View style={styles.container}>
         <View style={styles.deck}>
@@ -53,17 +43,17 @@ export default class DeckItem extends React.Component {
           <Text style={styles.text}>{deck.questions.length} cards</Text>
         </View>
 
-        <TouchableOpacity onPress={() => this.addCard(deck)}>
+        <TouchableOpacity onPress={() => this.addCard(title)}>
           <View>
             <Text style={styles.addCard}>Add Card</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.startQuiz(deck)}>
+        <TouchableOpacity onPress={() => this.startQuiz(title)}>
           <View>
             <Text style={styles.start}>Start Quiz</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.handleDelete(deck.title)}>
+        <TouchableOpacity onPress={() => this.handleDelete(title)}>
           <View>
             <Text style={styles.delete}>Delete Deck</Text>
           </View>
@@ -73,6 +63,18 @@ export default class DeckItem extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return { decks: state };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteDeck: (title) => {
+      dispatch({ type: "DELETE_DECK", title });
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeckItem);
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f1f1f1",

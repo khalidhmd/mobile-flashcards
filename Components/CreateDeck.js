@@ -7,7 +7,6 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
-
 import { connect } from "react-redux";
 
 class CreateDeckView extends React.Component {
@@ -51,7 +50,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createDeck: (title) => {
-      console.log("create");
       dispatch({ type: "CREATE_DECK", title });
     },
   };

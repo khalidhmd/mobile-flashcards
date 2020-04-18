@@ -37,13 +37,15 @@ export const getDecks = async () => {
     if (value !== null) {
       return JSON.parse(value);
     } else {
-      await AsyncStorage.setItem(appKey, JSON.stringify(decks));
-
-      return decks;
+      return {};
     }
   } catch (e) {
     console.log(e);
   }
+};
+
+export const saveDeckToStorage = async (decks) => {
+  await AsyncStorage.setItem(appKey, JSON.stringify(decks));
 };
 
 export const getDeck = async (title) => {

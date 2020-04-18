@@ -1,4 +1,4 @@
-import { CREATE_DECK, ADD_QUESTION, DELETE_DECK } from "../actions";
+import { CREATE_DECK, ADD_QUESTION, DELETE_DECK, LOAD_DECKS } from "../actions";
 
 const initState = {
   React: {
@@ -25,7 +25,7 @@ const initState = {
     ],
   },
 };
-export default reducer = (state = initState, action) => {
+export default reducer = (state = {}, action) => {
   switch (action.type) {
     case DELETE_DECK:
       const newState = { ...state };
@@ -38,6 +38,11 @@ export default reducer = (state = initState, action) => {
         [action.title]: { title: action.title, questions: [] },
       };
 
+    case LOAD_DECKS:
+      return {
+        ...action.decks,
+      };
+
     case ADD_QUESTION:
       return {
         ...state,
@@ -47,7 +52,6 @@ export default reducer = (state = initState, action) => {
         },
       };
     default:
-      break;
+      return state;
   }
-  return state;
 };

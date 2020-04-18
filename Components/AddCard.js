@@ -6,7 +6,6 @@ import {
   TextInput,
   StyleSheet,
 } from "react-native";
-
 import { connect } from "react-redux";
 
 class AddCard extends React.Component {

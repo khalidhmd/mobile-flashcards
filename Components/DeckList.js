@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
+
 import { connect } from "react-redux";
+import { getDecks } from "../api/helpers";
 
 class DeckList extends React.Component {
   state = {
@@ -20,6 +22,10 @@ class DeckList extends React.Component {
     Animated.timing(position, { toValue: 0, duration: 500 }).start();
     navigation.navigate("Deck", { title });
   };
+
+  componentDidMount() {
+    getDecks().then((decks) => this.props.loadDecks(decks));
+  }
 
   render() {
     const deckKeys = Object.keys(this.props.decks);
@@ -51,12 +57,20 @@ class DeckList extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loadDecks: (decks) => {
+      dispatch({ type: "LOAD_DECKS", decks });
+    },
+  };
+};
+
 const mapStateToProps = (state) => {
   return {
     decks: state,
   };
 };
-export default connect(mapStateToProps)(DeckList);
+export default connect(mapStateToProps, mapDispatchToProps)(DeckList);
 
 const styles = StyleSheet.create({
   container: {

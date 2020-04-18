@@ -1,7 +1,6 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { clearLocalNotification, setLocalNotification } from "../api/helpers";
-
 import { connect } from "react-redux";
 
 class DeckItem extends React.Component {
@@ -24,11 +23,11 @@ class DeckItem extends React.Component {
       .then(() => navigation.navigate("Quiz", { title }));
   };
 
-  handleDelete = async (title) => {
+  handleDelete = (title) => {
     const { navigation } = this.props;
     navigation.pop();
-    navigation.navigate("Decks");
     this.props.deleteDeck(title);
+    navigation.navigate("Decks");
   };
 
   render() {

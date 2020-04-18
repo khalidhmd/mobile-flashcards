@@ -6,13 +6,20 @@ import HomeTab from "./Components/HomeTab";
 import AddCard from "./Components/AddCard";
 import Deck from "./Components/Deck";
 import Quiz from "./Components/Quiz";
-import { setLocalNotification, listenForNotifications } from "./api/helpers";
+import {
+  setLocalNotification,
+  listenForNotifications,
+  saveDeckToStorage,
+} from "./api/helpers";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./reducers";
 
 const Stack = createStackNavigator();
-
+const store = createStore(reducer);
+store.subscribe(() => {
+  saveDeckToStorage(store.getState());
+});
 export default class App extends React.Component {
   componentDidMount() {
     setLocalNotification();
@@ -21,7 +28,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Provider store={createStore(reducer)}>
+      <Provider store={store}>
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen name="Decks" component={HomeTab} />
